@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .App {
   text-align: center;
 }
@@ -37,6 +41,6 @@
   }
 }
 
-.fc-daygrid-event{
+.fc-daygrid-event {
   white-space: normal !important;
 }
