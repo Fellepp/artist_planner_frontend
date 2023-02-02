@@ -1,26 +1,21 @@
 import React, { useEffect } from "react";
+import FullCalendar from "./components/FullCalendar";
 import "./App.css";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import { getConcertsByCity, getConcertsGlobal } from "./models"
+import "./index.css";
 
-const cityEndpoint = "/city"
-const city = "Oslo"
+import { getConcertsByCity, getConcertsGlobal } from "./models";
+import { Dropdown } from "./components/Dropdown";
+
+const cityEndpoint = "/city";
+const city = "Oslo";
 
 function App() {
   return (
     <div className="App">
-      <FullCalendar
-        initialView="dayGridMonth"
-        headerToolbar={{
-          left: "",
-          center: "title",
-        }}
-        themeSystem="standard"
-        plugins={[dayGridPlugin]}
-        //events={() => getConcertsByCity(cityEndpoint, city)}
-        events={() => getConcertsGlobal()}
-      />
+      <div>
+        <Dropdown />
+        <FullCalendar />
+      </div>
     </div>
   );
 }
