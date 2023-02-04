@@ -4,7 +4,7 @@ import "./App.css";
 import "./index.css";
 
 import { getConcertsByCity, getConcertsGlobal } from "./models";
-import { Dropdown } from "./components/Dropdown";
+import { ArtistDropdown } from "./components/ArtistDropdown";
 
 const cityEndpoint = "/city";
 const city = "Oslo";
@@ -13,7 +13,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        <Dropdown />
+        <ArtistDropdown />
         <FullCalendar />
       </div>
     </div>
