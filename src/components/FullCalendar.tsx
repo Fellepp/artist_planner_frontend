@@ -1,7 +1,7 @@
 import React from "react";
 import FullCalendarGrid from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import { getConcertsByCity, getConcertsGlobal } from "../models";
+import { getConcertsGlobal, getConcertsByContinent, getConcertsByCountry, getConcertsByCity, getConcertsByArtist, getConcertsByContinentAndArtist } from "../models";
 
 const FullCalendar = () => {
   return (
@@ -15,7 +15,8 @@ const FullCalendar = () => {
         themeSystem="standard"
         plugins={[dayGridPlugin]}
         //events={() => getConcertsByCity(cityEndpoint, city)}
-        events={() => getConcertsGlobal()}
+        //events={() => getConcertsGlobal()}
+        events={() => getConcertsByContinent("/continent", "Europe")}
       />
     </div>
   );
