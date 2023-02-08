@@ -1,3 +1,4 @@
+
 import { directive } from "@babel/types";
 import { Dictionary } from "express-serve-static-core";
 import { printDiffLines } from "jest-diff/build/diffLines";
@@ -25,7 +26,7 @@ const getConcertsByCountry = async (endpoint: string, country: string) => {
 };
 
 const getConcertsByCity = async (endpoint: string, city: string) => {
-  const response = await fetch(baseURL + endpoint + "/" + city);
+  const response = await fetch(baseURL + "/" + endpoint + "/" + city);
   const data = await response.json();
   return createEvents(data, "city");
 };
@@ -93,27 +94,24 @@ const createEventColor = (colorsByCountry: any, country: string) => {
   }
 }
 
+const getConcertsByArtist = async (endpoint: string, artist: string) => {
+  const newUrl = baseURL + "/" + endpoint + "/" + artist;
+  console.log(newUrl);
+  const response = await fetch(baseURL + "/" + endpoint + "/" + artist);
+  const data = await response.json();
+  return createEvents(data, "artist");
+};
 
-const createEvents = (data: any, type: string) => {
-  const events: any = [];
-  var colorsByCountry: any = {}
-
-  data.forEach((concert: any) => {
-    var colors = createEventColor(colorsByCountry, concert.country)
-    var seed = Math.floor(Math.random() * Object.keys(colors).length)
-    var eventColor = Object.keys(colors)[seed]
-    var textColor = colors[eventColor]
-
-    colorsByCountry[concert.country] = eventColor
-
-    events.push({
-      title: createEventTitle(concert, type),
-      date: concert.date.split("T")[0],
-      color: eventColor,
-      textColor: textColor
-
-    });
   });
+  } else if (type == "artist") {
+    data.forEach((concert: any) => {
+      console.log(concert.artist);
+      events.push({
+        title: `${concert.artist} \n ${concert.event} (${concert.category})`,
+        date: concert.date.split("T")[0],
+      });
+    });
+  }
 
   return events;
 };
