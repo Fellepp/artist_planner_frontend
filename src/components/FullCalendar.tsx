@@ -9,8 +9,9 @@ const FullCalendar = () => {
       <FullCalendarGrid
         initialView="dayGridMonth"
         headerToolbar={{
-          left: "dayGridDay, dayGridWeek, dayGridMonth",
+          left: "dayGridWeek,dayGridMonth",
           center: "title",
+          right: "prev,next today"
         }}
         themeSystem="standard"
         plugins={[dayGridPlugin]}
