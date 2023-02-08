@@ -2,7 +2,7 @@
 import { directive } from "@babel/types";
 import { Dictionary } from "express-serve-static-core";
 import { printDiffLines } from "jest-diff/build/diffLines";
-import { getArtists } from "./components/Dropdown";
+import { getArtists } from "./components/ArtistDropdown";
 
 const baseURL = "http://localhost:8080/api/v1";
 
@@ -62,25 +62,25 @@ const createEventTitle = (concert: any, type: String) => {
 
 const createEventColor = (colorsByCountry: any, country: string) => {
   const colors = {
-    "#FF0000" : "#FFFFFF", // RED
-    "#0000FF" : "#FFFFFF", // BLUE
-    "#00008B" : "#FFFFFF", // DARK BLUE
-    "#800080" : "#FFFFFF", // PURPLE
-    "#FF00FF" : "#FFFFFF", // MAGENTA
-    "#808080" : "#FFFFFF", // GREY
-    "#000000" : "#FFFFFF", // BLACK
-    "#FFA500" : "#FFFFFF", // ORANGE
-    "#A52A2A" : "#FFFFFF", // BROWN
-    "#008000" : "#FFFFFF", // GREEN
-    "#800000" : "#FFFFFF", // MAROON
-    "#808000" : "#FFFFFF", // OLIVE
-    "#00FFFF" : "#000000", // CYAN
-    "#FFC0CB" : "#000000", // PINK
-    "#C0C0C0" : "#000000", // SILVER
-    "#ADD8E6" : "#000000", // LIGHT BLUE
-    "#FFFF00" : "#000000", // YELLOW
-    "#00FF00" : "#000000", // LIME
-    "#7FFFD4" : "#000000" // AQUAMARINE
+    "#FF0000": "#FFFFFF", // RED
+    "#0000FF": "#FFFFFF", // BLUE
+    "#00008B": "#FFFFFF", // DARK BLUE
+    "#800080": "#FFFFFF", // PURPLE
+    "#FF00FF": "#FFFFFF", // MAGENTA
+    "#808080": "#FFFFFF", // GREY
+    "#000000": "#FFFFFF", // BLACK
+    "#FFA500": "#FFFFFF", // ORANGE
+    "#A52A2A": "#FFFFFF", // BROWN
+    "#008000": "#FFFFFF", // GREEN
+    "#800000": "#FFFFFF", // MAROON
+    "#808000": "#FFFFFF", // OLIVE
+    "#00FFFF": "#000000", // CYAN
+    "#FFC0CB": "#000000", // PINK
+    "#C0C0C0": "#000000", // SILVER
+    "#ADD8E6": "#000000", // LIGHT BLUE
+    "#FFFF00": "#000000", // YELLOW
+    "#00FF00": "#000000", // LIME
+    "#7FFFD4": "#000000" // AQUAMARINE
   }
 
 
@@ -94,24 +94,26 @@ const createEventColor = (colorsByCountry: any, country: string) => {
   }
 }
 
-const getConcertsByArtist = async (endpoint: string, artist: string) => {
-  const newUrl = baseURL + "/" + endpoint + "/" + artist;
-  console.log(newUrl);
-  const response = await fetch(baseURL + "/" + endpoint + "/" + artist);
-  const data = await response.json();
-  return createEvents(data, "artist");
-};
+const createEvents = (data: any, type: string) => {
+  const events: any = [];
+  var colorsByCountry: any = {}
 
-  });
-  } else if (type == "artist") {
-    data.forEach((concert: any) => {
-      console.log(concert.artist);
-      events.push({
-        title: `${concert.artist} \n ${concert.event} (${concert.category})`,
-        date: concert.date.split("T")[0],
-      });
+  data.forEach((concert: any) => {
+    var colors = createEventColor(colorsByCountry, concert.country)
+    var seed = Math.floor(Math.random() * Object.keys(colors).length)
+    var eventColor = Object.keys(colors)[seed]
+    var textColor = colors[eventColor]
+
+    colorsByCountry[concert.country] = eventColor
+
+    events.push({
+      title: createEventTitle(concert, type),
+      date: concert.date.split("T")[0],
+      color: eventColor,
+      textColor: textColor
+
     });
-  }
+  });
 
   return events;
 };
