@@ -1,50 +1,63 @@
-
-import { directive } from "@babel/types";
-import { Dictionary } from "express-serve-static-core";
-import { printDiffLines } from "jest-diff/build/diffLines";
-import { getArtists } from "./components/ArtistDropdown";
+import { Dictionary } from "@fullcalendar/core/internal";
 
 const baseURL = "http://localhost:8080/api/v1";
 
-const getConcertsGlobal = async () => {
+type Concert = {
+  id: string,
+  artist: string,
+  category: string,
+  city: string,
+  continent: string,
+  country: string,
+  date: string,
+  event: string,
+}
+
+type Event = {
+  title: string,
+  textColor: string,
+  color: string,
+  date: string
+}
+
+const getConcertsGlobal = async () : Promise<Event[]> => {
   const response = await fetch(baseURL + "/global");
-  const data = await response.json();
-  getArtists(data);
+  const data: Concert[] = await response.json();
   return createEvents(data, "global");
 };
 
-const getConcertsByContinent = async (endpoint: string, continent: string) => {
+const getConcertsByContinent = async (endpoint: string, continent: string) : Promise<Event[]> => {
   const response = await fetch(baseURL + endpoint + "/" + continent);
   const data = await response.json();
   return createEvents(data, "continent");
 };
 
-const getConcertsByCountry = async (endpoint: string, country: string) => {
+const getConcertsByCountry = async (endpoint: string, country: string) : Promise<Event[]> => {
   const response = await fetch(baseURL + endpoint + "/" + country);
   const data = await response.json();
   return createEvents(data, "country");
 };
 
-const getConcertsByCity = async (endpoint: string, city: string) => {
+const getConcertsByCity = async (endpoint: string, city: string) : Promise<Event[]> => {
   const response = await fetch(baseURL + "/" + endpoint + "/" + city);
   const data = await response.json();
   return createEvents(data, "city");
 };
 
-const getConcertsByArtist = async (endpoint: string, artist: string) => {
+const getConcertsByArtist = async (endpoint: string, artist: string) : Promise<Event[]> => {
   const response = await fetch(baseURL + endpoint + "/" + artist);
   const data = await response.json();
   return createEvents(data, "artist");
 };
 
-const getConcertsByContinentAndArtist = async (endpoint: string, continent: String, artist: string) => {
+const getConcertsByContinentAndArtist = async (endpoint: string, continent: String, artist: string) : Promise<Event[]> => {
   const response = await fetch(baseURL + endpoint + "/" + continent + "/" + artist);
   const data = await response.json();
   return createEvents(data, "continent");
 };
 
-const createEventTitle = (concert: any, type: String) => {
-  var titleString: String = ""
+const createEventTitle = (concert: Concert, type: string): string => {
+  var titleString = ""
 
   if (type === "global") {
     titleString = `${concert.artist} - ${concert.continent}, ${concert.country}, ${concert.city}, ${concert.event} (${concert.category})`
@@ -60,8 +73,9 @@ const createEventTitle = (concert: any, type: String) => {
   return titleString
 }
 
-const createEventColor = (colorsByCountry: any, country: string) => {
-  const colors = {
+const createEventColor = (colorsByCountry: Record<string, string>, country: string): Record<string, string> => {
+  let colors: Record<string, string> =
+  {
     "#FF0000": "#FFFFFF", // RED
     "#0000FF": "#FFFFFF", // BLUE
     "#00008B": "#FFFFFF", // DARK BLUE
@@ -83,22 +97,26 @@ const createEventColor = (colorsByCountry: any, country: string) => {
     "#7FFFD4": "#000000" // AQUAMARINE
   }
 
+  console.log(colors["#FF0000"])
 
   if (Object.keys(colorsByCountry).length === 0) {
     return colors
   } else if (country in colorsByCountry) {
-    return colorsByCountry[country]
+    var eventColor = colorsByCountry[country]
+    var textColor = colors[eventColor]
+    return {eventColor: textColor}
   } else {
-    console.log(colorsByCountry)
     return colors
   }
 }
 
-const createEvents = (data: any, type: string) => {
-  const events: any = [];
-  var colorsByCountry: any = {}
+const createEvents = (data: Concert[], type: string): Event[] => {
+  console.log("DATA")
+  console.log(data)
+  const events: Event[] = [];
+  var colorsByCountry: Record<string, string> = {}
 
-  data.forEach((concert: any) => {
+  data.forEach((concert: Concert) => {
     var colors = createEventColor(colorsByCountry, concert.country)
     var seed = Math.floor(Math.random() * Object.keys(colors).length)
     var eventColor = Object.keys(colors)[seed]
@@ -114,6 +132,8 @@ const createEvents = (data: any, type: string) => {
 
     });
   });
+  console.log("EVENTS")
+  console.log(events)
 
   return events;
 };
