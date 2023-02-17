@@ -1,0 +1,40 @@
+.buttonArea {
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    position: relative;
+    left: 5%;
+    height: 50vh;
+    background-color: #384454;
+    color: white;
+    width: 90%;
+}
+
+.title {
+    position: relative;
+    margin-top: 3%;
+    left: 5%;
+    font-size: large;
+    font-style: bold;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(80, 80, 80);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: black;
+}
